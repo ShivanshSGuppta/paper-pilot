@@ -1,6 +1,5 @@
 import { Queue } from "bullmq";
 import { nanoid } from "nanoid";
-import { env } from "./env";
 import { redis } from "./redis";
 
 export const GRADE_QUEUE_NAME = "vedaai-generation";

@@ -88,20 +88,20 @@ export async function createAssignment(req: Request, res: Response) {
 
   const promptBundle = buildAssessmentPrompt({
     dueDate,
-    sourceText: upload.extractedText,
+    sourceText: upload.extractedText ?? "",
     questionBlueprint: blueprint,
-    additionalInstructions: body.additionalInstructions,
-    schoolName: body.schoolName,
-    subject: body.subject,
-    className: body.className,
-    durationMinutes: body.durationMinutes ? Number(body.durationMinutes) : undefined,
-    maximumMarks: body.maximumMarks ? Number(body.maximumMarks) : totals.totalMarks
+    additionalInstructions: body.additionalInstructions ?? "",
+    ...(body.schoolName ? { schoolName: body.schoolName } : {}),
+    ...(body.subject ? { subject: body.subject } : {}),
+    ...(body.className ? { className: body.className } : {}),
+    ...(body.durationMinutes ? { durationMinutes: Number(body.durationMinutes) } : {}),
+    ...(body.maximumMarks ? { maximumMarks: Number(body.maximumMarks) } : { maximumMarks: totals.totalMarks })
   });
 
   const title =
     body.title?.trim() ||
     deriveAssignmentTitle({
-      subject: assignmentInput.subject,
+      subject: assignmentInput.subject ?? "Assessment",
       sourceText: upload.extractedText,
       additionalInstructions: body.additionalInstructions,
       questionBlueprint: blueprint
@@ -279,7 +279,10 @@ export async function regenerateAssignment(req: Request, res: Response) {
     return res.status(404).json({ message: "Assignment not found" });
   }
   if (invalidateCache) {
-    await invalidateCachedAssessment(assignment.promptSignature);
+    const promptSignature = typeof assignment.promptSignature === "string" ? assignment.promptSignature : "";
+    if (promptSignature) {
+      await invalidateCachedAssessment(promptSignature);
+    }
   }
 
   const jobId = createQueueJobId(assignment.id);
@@ -358,6 +361,7 @@ export async function downloadPdf(req: Request, res: Response) {
   });
   const pdf = await htmlToPdfBuffer(html);
   res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", `attachment; filename="${assignment.title.replace(/[^a-z0-9]+/gi, "_")}.pdf"`);
+  const safeTitle = assignment.title ?? "Untitled Assignment";
+  res.setHeader("Content-Disposition", `attachment; filename="${safeTitle.replace(/[^a-z0-9]+/gi, "_")}.pdf"`);
   res.send(pdf);
 }

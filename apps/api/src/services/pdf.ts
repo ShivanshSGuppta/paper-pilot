@@ -1,5 +1,6 @@
 import { chromium } from "playwright";
 import fs from "node:fs";
+import type { LaunchOptions } from "playwright";
 
 function resolveChromiumExecutablePath() {
   const candidates = [
@@ -217,11 +218,16 @@ export function renderAssessmentHtml(payload: {
 }
 
 export async function htmlToPdfBuffer(html: string) {
-  const browser = await chromium.launch({
+  const launchOptions: LaunchOptions = {
     headless: true,
-    executablePath: resolveChromiumExecutablePath(),
     args: ["--no-sandbox", "--disable-setuid-sandbox"]
-  });
+  };
+  const executablePath = resolveChromiumExecutablePath();
+  if (executablePath) {
+    launchOptions.executablePath = executablePath;
+  }
+
+  const browser = await chromium.launch(launchOptions);
   try {
     const page = await browser.newPage({
       viewport: { width: 1240, height: 1754 }

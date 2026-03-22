@@ -13,7 +13,7 @@
     "@vedaai/shared": "workspace:*",
     "bullmq": "^5.58.2",
     "dotenv": "^17.2.0",
-    "ioredis": "^5.6.1",
+    "ioredis": "^5.10.0",
     "mongoose": "^8.16.5",
     "nanoid": "^5.1.5",
     "jsonrepair": "^3.13.1",
