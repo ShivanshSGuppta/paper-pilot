@@ -1,0 +1,29 @@
+{
+  "name": "@vedaai/worker",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "build": "tsc -p tsconfig.json --noEmit",
+    "start": "tsx src/worker.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@vedaai/shared": "workspace:*",
+    "bullmq": "^5.58.2",
+    "dotenv": "^17.2.0",
+    "ioredis": "^5.6.1",
+    "mongoose": "^8.16.5",
+    "nanoid": "^5.1.5",
+    "jsonrepair": "^3.13.1",
+    "zod": "^3.25.76",
+    "pino": "^9.9.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "eslint": "^9.33.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
