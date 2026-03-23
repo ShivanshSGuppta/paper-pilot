@@ -16,6 +16,8 @@ export type FileMeta = {
 
 type State = {
   title: string;
+  subject: string;
+  className: string;
   dueDate: string;
   questionRows: QuestionRow[];
   additionalInstructions: string;
@@ -24,6 +26,8 @@ type State = {
   totalQuestions: number;
   totalMarks: number;
   setTitle: (value: string) => void;
+  setSubject: (value: string) => void;
+  setClassName: (value: string) => void;
   setDueDate: (value: string) => void;
   setInstructions: (value: string) => void;
   setFileMeta: (value: FileMeta | null) => void;
@@ -59,6 +63,8 @@ function calculate(rows: QuestionRow[]) {
 
 export const useAssignmentFormStore = create<State>((set, get) => ({
   title: "Science Assessment",
+  subject: "General",
+  className: "Not specified",
   dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString().slice(0, 10),
   questionRows: defaultRows,
   additionalInstructions: "Generate a balanced paper with clear wording and one application-focused question.",
@@ -67,6 +73,8 @@ export const useAssignmentFormStore = create<State>((set, get) => ({
   totalQuestions: calculate(defaultRows).totalQuestions,
   totalMarks: calculate(defaultRows).totalMarks,
   setTitle: (value) => set({ title: value }),
+  setSubject: (value) => set({ subject: value }),
+  setClassName: (value) => set({ className: value }),
   setDueDate: (value) => set({ dueDate: value }),
   setInstructions: (value) => set({ additionalInstructions: value }),
   setFileMeta: (value) => set({ fileMeta: value }),
@@ -95,6 +103,8 @@ export const useAssignmentFormStore = create<State>((set, get) => ({
   },
   reset: () => set({
     title: "Science Assessment",
+    subject: "General",
+    className: "Not specified",
     dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString().slice(0, 10),
     questionRows: defaultRows,
     additionalInstructions: "Generate a balanced paper with clear wording and one application-focused question.",
@@ -105,6 +115,8 @@ export const useAssignmentFormStore = create<State>((set, get) => ({
   setSubmitting: (value) => set({ isSubmitting: value }),
   hydrateDemo: () => set({
     title: "Science Assessment",
+    subject: "General",
+    className: "Not specified",
     dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 3).toISOString().slice(0, 10),
     questionRows: defaultRows,
     additionalInstructions: "Generate a balanced paper with clear wording and one application-focused question.",

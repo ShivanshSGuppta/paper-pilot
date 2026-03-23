@@ -18,6 +18,8 @@ import { z } from "zod";
 
 const createFormSchema = z.object({
   title: z.string().trim().min(1).optional(),
+  subject: z.string().trim().optional(),
+  className: z.string().trim().optional(),
   dueDate: z.string().min(1, "Due date is required"),
   questionRows: z
     .array(
@@ -32,6 +34,20 @@ const createFormSchema = z.object({
   additionalInstructions: z.string().max(4000).optional()
 });
 
+function mergePromptNotes(subject: string, className: string, additionalInstructions?: string) {
+  const sections = [
+    `Subject: ${subject.trim() || "General"}`,
+    `Class: ${className.trim() || "Not specified"}`
+  ];
+
+  const trimmedInstructions = additionalInstructions?.trim();
+  if (trimmedInstructions) {
+    sections.push(trimmedInstructions);
+  }
+
+  return sections.join("\n\n");
+}
+
 export function CreateAssignmentClient() {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -41,6 +57,8 @@ export function CreateAssignmentClient() {
 
   const {
     title,
+    subject,
+    className,
     dueDate,
     questionRows,
     additionalInstructions,
@@ -48,6 +66,8 @@ export function CreateAssignmentClient() {
     totalQuestions,
     totalMarks,
     setDueDate,
+    setSubject,
+    setClassName,
     setInstructions,
     setFileMeta,
     addQuestionRow,
@@ -58,7 +78,10 @@ export function CreateAssignmentClient() {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const parsed = createFormSchema.parse({ title, dueDate, questionRows, additionalInstructions });
+      const parsed = createFormSchema.parse({ title, subject, className, dueDate, questionRows, additionalInstructions });
+      const safeSubject = parsed.subject?.trim() || "General";
+      const safeClassName = parsed.className?.trim() || "Not specified";
+      const mergedInstructions = mergePromptNotes(safeSubject, safeClassName, parsed.additionalInstructions);
       const formData = new FormData();
       formData.set("title", parsed.title || "");
       formData.set("dueDate", new Date(parsed.dueDate).toISOString());
@@ -72,12 +95,12 @@ export function CreateAssignmentClient() {
           }))
         )
       );
-      formData.set("additionalInstructions", parsed.additionalInstructions || "");
+      formData.set("additionalInstructions", mergedInstructions);
       formData.set("teacherName", "John Doe");
       formData.set("teacherEmail", "john.doe@vedaai.school");
       formData.set("schoolName", "Delhi Public School Sector-4, Bokaro");
-      formData.set("subject", "English");
-      formData.set("className", "5th");
+      formData.set("subject", safeSubject);
+      formData.set("className", safeClassName);
       formData.set("durationMinutes", "45");
       formData.set("maximumMarks", String(totalMarks));
       if (selectedFile) {
@@ -132,12 +155,14 @@ export function CreateAssignmentClient() {
   const validation = useMemo(() => {
     const result = createFormSchema.safeParse({
       title,
+      subject,
+      className,
       dueDate,
       questionRows,
       additionalInstructions
     });
     return result.success ? null : result.error.flatten();
-  }, [title, dueDate, questionRows, additionalInstructions]);
+  }, [title, subject, className, dueDate, questionRows, additionalInstructions]);
 
   return (
     <div className="mx-auto max-w-[980px] space-y-4">
@@ -161,6 +186,27 @@ export function CreateAssignmentClient() {
           </div>
 
           <FileUploadCard fileMeta={fileMeta} onChange={onFileChange} />
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <div className="mb-2 text-[12px] font-semibold text-[#232323]">Subject</div>
+              <Input
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+                placeholder="General"
+                className="bg-[#fbfbfb]"
+              />
+            </label>
+            <label className="block">
+              <div className="mb-2 text-[12px] font-semibold text-[#232323]">Class</div>
+              <Input
+                value={className}
+                onChange={(e) => setClassName(e.target.value)}
+                placeholder="Not specified"
+                className="bg-[#fbfbfb]"
+              />
+            </label>
+          </div>
 
           <div>
             <div className="mb-2 text-[12px] font-semibold text-[#232323]">Due Date</div>
