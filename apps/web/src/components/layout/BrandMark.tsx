@@ -18,11 +18,11 @@ export function BrandMark({
         )}
       >
         <div className="absolute inset-[2px] rounded-[10px] bg-[linear-gradient(180deg,rgba(255,255,255,0.3),rgba(255,255,255,0.04))]" />
-        <span className="relative font-extrabold tracking-[-0.08em]">V</span>
+        <span className="relative font-extrabold tracking-[-0.08em]">P</span>
       </div>
       <div className="min-w-0">
         <div className={cn("font-semibold tracking-tight text-[#232323]", compact ? "text-[1rem]" : "text-[1.05rem]")}>
-          VedaAI
+          Paper Pilot
         </div>
       </div>
     </div>

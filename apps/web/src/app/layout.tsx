@@ -14,7 +14,7 @@ const paperFont = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "VedaAI - AI Assessment Creator",
+  title: "Paper Pilot - AI Assessment Creator",
   description: "Recruiter-grade AI assessment creator for teachers"
 };
 
