@@ -20,7 +20,7 @@ Recruiter-grade monorepo for teachers to create assignments, generate structured
 ## Folder Structure
 
 ```text
-vedaai-assessment-creator/
+paperpilot-assessment-creator/
   apps/
     api/
     web/
@@ -57,9 +57,9 @@ docker compose up -d mongo redis
 4. Run the apps.
 
 ```bash
-pnpm --filter @vedaai/api dev
-pnpm --filter @vedaai/worker dev
-pnpm --filter @vedaai/web dev
+pnpm --filter @paperpilot/api dev
+pnpm --filter @paperpilot/worker dev
+pnpm --filter @paperpilot/web dev
 ```
 
 ## Environment Variables
@@ -111,7 +111,7 @@ pnpm --filter @vedaai/web dev
 Web (Vercel):
 1. Import the `apps/web` project.
 2. Set `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SOCKET_URL` to your API domain.
-3. Build command: `pnpm --filter @vedaai/web build`
+3. Build command: `pnpm --filter @paperpilot/web build`
 4. Output: Next.js default (no custom output).
 
 API (Render/Railway):
@@ -128,7 +128,7 @@ API (Render/Railway):
    - `LLM_MODEL`
    - `UPLOAD_DIR=./uploads`
    - `SEED_DEMO_DATA=false`
-3. Start command: `pnpm --filter @vedaai/api start`
+3. Start command: `pnpm --filter @paperpilot/api start`
 
 Worker (Render/Railway):
 1. Deploy `apps/worker` as a background worker.
@@ -140,7 +140,7 @@ Worker (Render/Railway):
    - `LLM_API_KEY`
    - `LLM_BASE_URL` (optional)
    - `LLM_MODEL`
-3. Start command: `pnpm --filter @vedaai/worker start`
+3. Start command: `pnpm --filter @paperpilot/worker start`
 
 Health endpoints are exposed at `/health` and `/ready`.
 
