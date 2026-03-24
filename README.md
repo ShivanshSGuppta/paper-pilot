@@ -1,4 +1,4 @@
-# VedaAI - AI Assessment Creator
+# PaperPilot - AI Assessment Creator
 
 Recruiter-grade monorepo for teachers to create assignments, generate structured question papers with AI, and view/export print-ready assessments.
 
